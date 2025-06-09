@@ -68,15 +68,6 @@ export default function NavbarHeader() {
                       </li>
                     )
                   })}
-                  <li>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white">Action</a>
-                  </li>
-                  <li>
-                    <a href="/romance" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white">Romance</a>
-                  </li>
-                  <li>
-                    <a href="#" className="block px-4 py-2 hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white">Comedy</a>
-                  </li>
                 </ul>
                 {/* <div className="py-1">
                   <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800 dark:text-gray-200 dark:hover:text-white">Sign out</a>
