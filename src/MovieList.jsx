@@ -170,7 +170,7 @@ export default function MovieList() {
                                 className="relative group bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-700 dark:bg-gray-800 dark:border-gray-700 w-full max-w-sm mx-auto overflow-hidden transition duration-300"
                                 onClick={() => openModal(data)}
                             >
-                                <img className="pt-4 rounded-t-lg mx-auto h-auto object-cover" src={data.backdrop_path} alt="" />
+                                <img className="rounded-t-lg w-full object-contain" src={data.backdrop_path} alt="" />
 
                                 {/* //the movie's title and caption */}
                                 <div className="flex flex-col items-center text-center p-4 space-y-2">
