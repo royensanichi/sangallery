@@ -142,9 +142,7 @@ export default function MovieList() {
     return (
         <div className="justify-center mx-auto">
             <Pagination page={page} onPageChange={setPage} />
-            {/* Your movie cards */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4"> ... </div>
-            <Pagination page={page} onPageChange={setPage} />
+
             <div className="flex justify-center bg-gradient-to-b from-blue-500">
                 <div className="p-2 sm:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl">
 
@@ -223,31 +221,7 @@ export default function MovieList() {
                 )}
 
             </div>
-            <div className="pb-4 pr-4 flex justify-end items-center h-auto">
-                <nav aria-label="Page navigation example">
-                    <ul className="inline-flex -space-x-px text-sm">
-                        <li>
-                            <a className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => { state.page > 1 && switchPage(state.page - 1) }}>Previous</a>
-                        </li>
-                        <li>
-                            <a className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 ${state.page == 1 ? null : " dark:hover:text-white"}`} onClick={() => { state.page > 1 && switchPage(1) }}>{state.page === 1 ? "-" : "First page"}</a>
-                        </li>
-                        <li>
-                            <a aria-current="page" className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white" onClick={(e) => e.stopPropagation()}>{state.page}</a>
-                        </li>
-                        <li>
-                            <a className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => { state.page < 500 && switchPage(state.page + 1) }}>{state.page < 500 ? state.page + 1 : "-"}</a>
-                        </li>
-                        <li>
-                            <a className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => { switchPage(500) }}>Last Page</a>
-                        </li>
-
-                        <li>
-                            <a className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => { state.page < 500 && switchPage(state.page + 1) }}>{state.page < 500 ? "Next" : "-"}</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+            <Pagination page={page} onPageChange={setPage} />
 
         </div>
     )
