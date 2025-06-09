@@ -17,6 +17,6 @@ export const shortdesc = (data) => {
 export const movieGenreFilter = (data) => {
     if (!Array.isArray(data.genre_ids)) return '';
     const genreNames = data.genre_ids.map(id => genreMap[id]).filter(Boolean);
-    return genreNames.join(', ');
+    return genreNames.join(', ');   
       
 }
