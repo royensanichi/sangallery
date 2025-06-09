@@ -16,6 +16,7 @@ export default function MovieList() {
         searchValue: "",
         details: {},
         modalOpen: false,
+        page: 1
     });
 
     useEffect(() => {
@@ -117,10 +118,44 @@ export default function MovieList() {
     const openModal = (param) => {
         setState(prev => ({ ...prev, modalOpen: true, details: param }));
     }
-    // console.log(state)
+    console.log(state)
+
+    const switchPage = (param) => {
+        console.log("switching page :" + param)
+        setState(prev => ({ page: param }))
+        console.log("fetching new page")
+        fetching(url + `discover/movie?include_adult=false&include_video=false&language=en-US&page=${param}&sort_by=popularity.desc`)
+            .then((data) => {
+                console.log(data)
+                return setState(prev => ({ ...prev, posts: data.results }));
+            })
+
+    }
 
     return (
         <div className="justify-center mx-auto">
+            <div className="p-4 flex justify-end items-center h-auto">
+                <nav aria-label="Page navigation example">
+                    <ul className="inline-flex -space-x-px text-sm">
+                        <li>
+                            <a className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => { switchPage(state.page - 1) }}>Previous</a>
+                        </li>
+                        <li>
+                            <a className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 ${state.page == 1 ? null : " dark:hover:text-white"}`} onClick={() => { state.page > 1 && switchPage(1) }}>{state.page == 1 ? "-" : 1}</a>
+                        </li>
+                        <li>
+                            <a aria-current="page" className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white" onClick={(e) => e.stopPropagation()}>{state.page}</a>
+                        </li>
+                        <li>
+                            <a className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => { switchPage(500) }}>500</a>
+                        </li>
+
+                        <li>
+                            <a className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => { switchPage(state.page + 1) }}>Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
             <div className="flex justify-center bg-gradient-to-b from-blue-500">
                 <div className="p-2 sm:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl">
 
@@ -146,6 +181,7 @@ export default function MovieList() {
                             //the Card
                             <div key={index}
                                 className="relative group bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 w-full max-w-sm mx-auto overflow-hidden"
+                                onClick={() => openModal(data)}
                             >
                                 <img className="pt-4 rounded-t-lg mx-auto h-auto object-cover" src={data.backdrop_path} alt="" />
 
@@ -190,10 +226,26 @@ export default function MovieList() {
 
             </div>
             <div className="pb-4 pr-4 flex justify-end items-center h-auto">
-                {/* <button className="mx-auto">
-                    Load More
-                </button> */}
-                <Pagination/>
+                <nav aria-label="Page navigation example">
+                    <ul className="inline-flex -space-x-px text-sm">
+                        <li>
+                            <a className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => { switchPage(state.page - 1) }}>Previous</a>
+                        </li>
+                        <li>
+                            <a className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 ${state.page == 1 ? null : " dark:hover:text-white"}`} onClick={() => { state.page > 1 && switchPage(1) }}>{state.page == 1 ? "-" : 1}</a>
+                        </li>
+                        <li>
+                            <a aria-current="page" className="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white" onClick={(e) => e.stopPropagation()}>{state.page}</a>
+                        </li>
+                        <li>
+                            <a className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => { switchPage(500) }}>500</a>
+                        </li>
+
+                        <li>
+                            <a className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white" onClick={() => { switchPage(state.page + 1) }}>Next</a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
 
         </div>
