@@ -2,7 +2,7 @@ import { fetching } from "./components/api";
 import { useState, useEffect } from "react";
 import { shortdesc, movieGenreFilter } from "./components/commonFunc";
 import { useRef } from "react";
-import Pagination from "./pagination";
+import Pagination from "./Paginations";
 
 export default function MovieList() {
     const loadMoreRef = useRef(null);
