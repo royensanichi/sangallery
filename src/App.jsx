@@ -5,7 +5,7 @@ import MovieList from './MovieList'
 
 function App() {
   return (
-    <div className="m-150 relative">
+    <div>
       <NavbarHeader />
       <MovieList/>
       <Footer />
