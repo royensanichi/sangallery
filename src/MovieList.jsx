@@ -49,7 +49,9 @@ export default function MovieList() {
             try {
                 await fetching(url + "discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc")
                     .then((data) => {
+                        filterDataResult(data.results);
                         return setState(prev => ({ ...prev, posts: [...prev.posts, ...data.results] }));
+
                     })
             } catch (err) {
                 console.log(err);
@@ -92,6 +94,28 @@ export default function MovieList() {
             console.error(err);
         }
     }
+
+    const filterDataResult = (param) => {
+        param.map((data, index) => {
+            //Filter the Year of the Movie, 4 substring only (yyyy-mm-dd)
+            data.year = data.release_date.substring(0, 4);
+
+            //setting the genre of the movie 
+            data.genre = movieGenreFilter(data)
+
+            //filter the Movie's rating-less with no rating yet  
+            if (data.vote_average === 0) {
+                data.vote_average = "no rating"
+            }
+            //if the movie have No Image
+            if (data.backdrop_path === null || data.backdrop_path === "") { data.backdrop_path = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png" }
+            else {
+                //replacing the backdrop_path with TMDb link + backdrop_path so it can fetch the image 
+                data.backdrop_path = `https://www.themoviedb.org/t/p/w220_and_h330_face/${data.backdrop_path}`
+            }
+        })
+    }
+
 
     const OnSearch = async (value) => {
         const isSearching = value.trim() !== "";
@@ -141,29 +165,18 @@ export default function MovieList() {
 
     return (
         <div className="justify-center mx-auto">
-            <Pagination page={page} onPageChange={setPage} />
+            <div className="px-4 block sm:flex justify-between items-center h-auto">
+                <button onClick={() => console.log(state.posts)}>log Data</button>
 
-            <div className="flex justify-center bg-gradient-to-b from-blue-500">
+                <h1>MOVIE LIST</h1>
+                <Pagination page={page} onPageChange={setPage} />
+            </div>
+            {/* MovieList Container */}
+            <div className="justify-center bg-gradient-to-b from-blue-500">
                 <div className="p-2 sm:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl">
 
+                    {/* looping total 20 movies */}
                     {state.posts && state.posts.map((data, index) => {
-                        //Filter the Year of the Movie, 4 substring only (yyyy-mm-dd)
-                        data.year = data.release_date.substring(0, 4);
-
-                        //setting the genre of the movie 
-                        data.genre = movieGenreFilter(data)
-
-                        //filter the Movie's rating-less with no rating yet  
-                        if (data.vote_average === 0) {
-                            data.vote_average = "no rating"
-                        }
-                        //if the movie have No Image
-                        if (data.backdrop_path === null || data.backdrop_path === "") { data.backdrop_path = "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png" }
-                        else {
-                            //replacing the backdrop_path with TMDb link + backdrop_path so it can fetch the image 
-                            data.backdrop_path = `https://www.themoviedb.org/t/p/w220_and_h330_face/${data.backdrop_path}`
-                        }
-
                         return (
                             //the Card
                             <div key={index}
