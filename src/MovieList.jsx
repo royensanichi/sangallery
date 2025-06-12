@@ -245,8 +245,6 @@ export default function MovieList() {
                 </button>
             </div>
 
-
-
         )
     }
 
@@ -261,7 +259,7 @@ export default function MovieList() {
             </div>
             {/* MovieList Container */}
             <div className="justify-center bg-gradient-to-b from-blue-500">
-                <div className="p-2 sm:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl">
+                <div className="mx-auto     p-2 sm:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-screen-xl">
 
                     {/* looping total 20 movies */}
                     {state.posts && state.posts.map((data, index) => {
