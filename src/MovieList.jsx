@@ -20,8 +20,10 @@ export default function MovieList() {
     category,
     page,
     modalOpen,
+    onSearch,
+    searchValue,
     setPage,
-    searchInput,
+    setSearchValue,
     setModalOnOff,
     setOnSearch,
     setisLoading,
@@ -135,8 +137,12 @@ export default function MovieList() {
 
   const OnSearch = async (value) => {
     // setState(()=> ({posts:[]}))
-    const isSearching = value.trim() !== "";
-    const endpoint = isSearching
+    const isSearchingNotEmpty = value.trim() !== "";
+    setPage(1);
+    setOnSearch(true);
+    setSearchValue(value);
+    console.log('test'+JSON.stringify(searchValue))
+    const endpoint = isSearchingNotEmpty
       ? `search/movie?query=${value}&include_adult=false&language=en-US&page=1`
       : `discover/movie`;
 
@@ -147,9 +153,6 @@ export default function MovieList() {
       // onSearch: isSearching,
       posts: [],
     }));
-    setPage(1);
-    setOnSearch();
-    searchInput(isSearching);
     // setPosts
 
     try {
@@ -173,15 +176,25 @@ export default function MovieList() {
   const savingNewMovieList = (param) => {
     filterDataResult(param.results);
     setState((prev) => ({ ...prev, posts: param.results }));
-    return setisLoading(false)
+    return setisLoading(false);
   };
 
   const switchPage = (param) => {
     setPage(param);
-    fetching(
+    console.log(searchValue)
+    console.log(page)
+
+    const searchUrl =
       url +
-        `discover/movie?include_adult=false&include_video=false&language=en-US&page=${param}&sort_by=popularity.desc`
-    ).then((data) => {
+      `search/movie?query=${searchValue}&include_adult=false&language=en-US&page=${param}`;
+    const originalUrl =
+      url +
+      `discover/movie?include_adult=false&include_video=false&language=en-US&page=${param}&sort_by=popularity.desc`;
+
+     const usedUrl = onSearch ? searchUrl : originalUrl;
+      console.log("is onSearch ?"+ searchValue + " page : "+param)
+
+    fetching(usedUrl).then((data) => {
       return savingNewMovieList(data);
     });
   };
