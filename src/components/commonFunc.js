@@ -16,9 +16,15 @@ export const shortdesc = (data) => {
 
 export const movieGenreFilter = (data) => {
     if (!Array.isArray(data.genre_ids)) return '';
-    const genreNames = [];
-    data.genre_ids.map(id => {
-        genreMap[id] !== undefined ? genreNames.push(genreMap[id].name) : null;
-    }).filter(Boolean);
 
-}
+    const genreNames = [];
+
+    data.genre_ids.forEach(id => {
+        if (genreMap[id] !== undefined) {
+            // console.log('get! ' + genreMap[id].name + ' = ' + id);
+            genreNames.push(genreMap[id].name);
+        }
+    });
+
+    return genreNames.join(', ');
+};

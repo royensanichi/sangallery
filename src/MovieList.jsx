@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { shortdesc, movieGenreFilter } from "./components/commonFunc";
 import { useRef } from "react";
 import Pagination from "./Paginations";
-import { searchPage, setModalOnOff, setOnSearch, setPosts, useStore } from "./store";
+import { useStore } from "./store";
 
 export default function MovieList() {
   const loadMoreRef = useRef(null);
@@ -12,50 +12,58 @@ export default function MovieList() {
 
   const [state, setState] = useState({
     posts: [],
-    count: 2,
-    onSearch: false,
-    searchValue: "",
     details: {},
   });
   const [loading, setLoading] = useState(true);
 
-  const {section, page, modalOpen}= useStore();
+  const {
+    category,
+    page,
+    modalOpen,
+    setPage,
+    searchInput,
+    setModalOnOff,
+    setOnSearch,
+    setisLoading,
+  } = useStore();
 
-//   useEffect(() => {
-//     const observer = new IntersectionObserver(
-//       (entries) => {
-//         if (entries[0].isIntersecting) {
-//           loadMore();
-//         }
-//       },
-//       {
-//         root: null,
-//         rootMargin: "0px",
-//         threshold: 1.0,
-//       }
-//     );
+  //   useEffect(() => {
+  //     const observer = new IntersectionObserver(
+  //       (entries) => {
+  //         if (entries[0].isIntersecting) {
+  //           loadMore();
+  //         }
+  //       },
+  //       {
+  //         root: null,
+  //         rootMargin: "0px",
+  //         threshold: 1.0,
+  //       }
+  //     );
 
-//     if (loadMoreRef.current) {
-//       observer.observe(loadMoreRef.current);
-//     }
+  //     if (loadMoreRef.current) {
+  //       observer.observe(loadMoreRef.current);
+  //     }
 
-//     return () => {
-//       if (loadMoreRef.current) {
-//         observer.unobserve(loadMoreRef.current);
-//       }
-//     };
-//   }, [loadMoreRef, state.count, state.onSearch, state.searchValue]);
+  //     return () => {
+  //       if (loadMoreRef.current) {
+  //         observer.unobserve(loadMoreRef.current);
+  //       }
+  //     };
+  //   }, [loadMoreRef, state.count, state.onSearch, state.searchValue]);
 
   useEffect(() => {
     async function fetchData() {
       try {
+        setisLoading(true);
         await fetching(
           url +
-            `${section}/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`
+            `${category}/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc`
         ).then((data) => {
           return savingNewMovieList(data);
         });
       } catch (err) {
+        setisLoading(false);
         console.log(err);
       }
     }
@@ -85,22 +93,22 @@ export default function MovieList() {
     };
   }, [modalOpen]);
 
-//   const loadMore = async () => {
-//     const endpoint = onSearch
-//       ? `search/movie?query=${searchValue}&include_adult=false&language=en-US&page=${count}`
-//       : `discover/movie?include_adult=false&include_video=false&language=en-US&page=${count}&sort_by=popularity.desc`;
+  //   const loadMore = async () => {
+  //     const endpoint = onSearch
+  //       ? `search/movie?query=${searchValue}&include_adult=false&language=en-US&page=${count}`
+  //       : `discover/movie?include_adult=false&include_video=false&language=en-US&page=${count}&sort_by=popularity.desc`;
 
-//     try {
-//       const data = await fetching(endpoint);
-//       setState((prev) => ({
-//         ...prev,
-//         posts: [...prev.posts, ...data.results],
-//       }));
-//       setState((prev) => ({ ...prev, count: prev.count + 1 }));
-//     } catch (err) {
-//       console.error(err);
-//     }
-//   };
+  //     try {
+  //       const data = await fetching(endpoint);
+  //       setState((prev) => ({
+  //         ...prev,
+  //         posts: [...prev.posts, ...data.results],
+  //       }));
+  //       setState((prev) => ({ ...prev, count: prev.count + 1 }));
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
 
   const filterDataResult = (param) => {
     param.map((data, index) => {
@@ -126,7 +134,8 @@ export default function MovieList() {
   };
 
   const OnSearch = async (value) => {
-    // const isSearching = value.trim() !== "";
+    // setState(()=> ({posts:[]}))
+    const isSearching = value.trim() !== "";
     const endpoint = isSearching
       ? `search/movie?query=${value}&include_adult=false&language=en-US&page=1`
       : `discover/movie`;
@@ -138,11 +147,10 @@ export default function MovieList() {
       // onSearch: isSearching,
       posts: [],
     }));
-    searchPage(value);
-    setPage(2);
+    setPage(1);
     setOnSearch();
+    searchInput(isSearching);
     // setPosts
-
 
     try {
       const data = await fetching(url + endpoint);
@@ -158,12 +166,14 @@ export default function MovieList() {
 
   const openModal = (param) => {
     setLoading(true);
+    console.log(state.posts);
     setState((prev) => ({ ...prev, modalOpen: true, details: param }));
   };
 
   const savingNewMovieList = (param) => {
     filterDataResult(param.results);
-    return setState((prev) => ({ ...prev, posts: param.results }));
+    setState((prev) => ({ ...prev, posts: param.results }));
+    return setisLoading(false)
   };
 
   const switchPage = (param) => {
@@ -200,7 +210,7 @@ export default function MovieList() {
                   ? "cursor-not-allowed pointer-events-none opacity-50"
                   : "dark:hover:text-white"
               }`}
-              onClick={() => page < maxPage && switchPage(page - 1)}
+              onClick={() => page > 1 && switchPage(page - 1)}
             >
               {page <= 1 ? "-" : page - 1}
             </a>
@@ -430,8 +440,8 @@ export default function MovieList() {
               <h2 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
                 {state.details.title} - {state.details.year}
               </h2>
-              <h3 className="text-1xl font-bold mb-2 text-gray-900 dark:text-white">
-                {state.details.genres}
+              <h3 className="text font-bold mb-2 text-gray-900 dark:text-white">
+                Genre: {state.details.genre ? state.details.genre : "null"}
               </h3>
               <p className="text-gray-700 dark:text-gray-300">
                 {state.details.overview}
