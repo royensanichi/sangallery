@@ -15,6 +15,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
+.min-h-800 {
+    min-height: 800px;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
